@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutterfire_oop_modeler/database_object.dart';
 
-
 class TestObject extends DatabaseObject {
   String? name;
   int? age;
@@ -21,10 +20,4 @@ class TestObject extends DatabaseObject {
     name = d['name'];
     age = d['age'];
   }
-}
-
-
-void main() async {
-
-
 }
