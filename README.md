@@ -11,29 +11,59 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Object Like Model put on Firebase Firestore Database to make Modelling Databases easier and faster
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Install the with `flutter pub add firebase_oop_modeler`
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
+Create an DatabaseObject with input and output function it will be 1:1 representet in your Database
 ```dart
-const like = 'sample';
+class TestObject extends DatabaseObject {
+  String? name;
+  int? age;
+
+  TestObject({this.name, this.age, super.ref});
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'age': age,
+    };
+  }
+
+  @override
+  void fromMap(Map<String, dynamic> d) {
+    name = d['name'];
+    age = d['age'];
+  }
+}
 ```
 
-## Additional information
+### Loading data from Firebase
+You can load Objects of a Type from the database with the following functions:
+```dart
+TestObject to = loadSnapshot(DocumentSnapshot d, TestObject.new);
+TestObject to = await loadReference(DocumentReference d, TestObject.new);
+TestObject to = await loadAllFromPath("users/user1", TestObject.new);
+```
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+### Collection API
+You can scan Collections with the following functions:
+```dart
+// Not Reccomended
+DatabaseList<TestObject> lo = fromQuerySnapshot(CollectionReference d, QuerySnapshot l, TestObject.new);
+
+DatabaseList<TestObject> lo = loadCollection(CollectionReference d, TestObject.new);
+
+DatabaseList<TestObject> lo = loadAllFromPath("user", TestObject.new);
+
+```
+
+
+

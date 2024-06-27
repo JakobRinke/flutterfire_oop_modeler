@@ -5,14 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutterfire_oop_modeler/database_list.dart';
 
-
 void main() async {
   // init firebase
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -23,7 +20,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -35,7 +31,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-
   final String title;
 
   @override
@@ -43,8 +38,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  DatabaseList<TestObject> testObjects = DatabaseList<TestObject>(refS: 'testobjects');
+  DatabaseList<TestObject> testObjects =
+      DatabaseList<TestObject>(refS: 'testobjects');
   bool isLoading = true;
 
   void initiState() {
@@ -54,14 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _loadTestObjects() async {
     isLoading = false;
     await testObjects.reloadComplete(TestObject.new);
-    print("reloaded");
-    print(testObjects.map((e) => {
-      e.name
-    
-    }).toList());
-    setState(() {
-      
-    });
+    // print("reloaded");
+    // print(testObjects.map((e) => {e.name}).toList());
+    setState(() {});
   }
 
   @override
@@ -70,7 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _loadTestObjects();
     }
     return Scaffold(
-      
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -80,18 +69,17 @@ class _MyHomePageState extends State<MyHomePage> {
               buildTestObjectView(TestObject(), _loadTestObjects, context),
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: testObjects.length,
                 itemBuilder: (context, index) {
-                  return buildTestObjectView(testObjects[index], _loadTestObjects, context);
+                  return buildTestObjectView(
+                      testObjects[index], _loadTestObjects, context);
                 },
               ),
             ],
           ),
-        ), 
+        ),
       ),
-      
-
     );
   }
 }

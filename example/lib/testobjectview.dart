@@ -1,13 +1,14 @@
 import 'package:example/testobject.dart';
 import 'package:flutter/material.dart';
 
-Widget buildTestObjectView(TestObject testObject, Function reload, BuildContext context) {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
+Widget buildTestObjectView(
+    TestObject testObject, Function reload, BuildContext context) {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
 
   if (testObject.ref != null) {
-    _nameController.text = testObject.name ?? '';
-    _ageController.text = testObject.age?.toString() ?? '';
+    nameController.text = testObject.name ?? '';
+    ageController.text = testObject.age?.toString() ?? '';
   }
 
   bool isCreate = testObject.ref == null;
@@ -19,25 +20,25 @@ Widget buildTestObjectView(TestObject testObject, Function reload, BuildContext 
       child: Column(
         children: [
           TextField(
-            controller: _nameController,
-            decoration: InputDecoration(
+            controller: nameController,
+            decoration: const InputDecoration(
               labelText: 'Name',
             ),
           ),
           TextField(
-            controller: _ageController,
-            decoration: InputDecoration(
+            controller: ageController,
+            decoration: const InputDecoration(
               labelText: 'Age',
             ),
           ),
           ElevatedButton(
             onPressed: () async {
-              testObject.name = _nameController.text;
-              testObject.age = int.tryParse(_ageController.text);
+              testObject.name = nameController.text;
+              testObject.age = int.tryParse(ageController.text);
               if (isCreate) {
                 await testObject.createInPath('testobjects');
-                _nameController.text = '';
-                _ageController.text = '';
+                nameController.text = '';
+                ageController.text = '';
                 testObject = TestObject();
               } else {
                 await testObject.update();
@@ -52,7 +53,7 @@ Widget buildTestObjectView(TestObject testObject, Function reload, BuildContext 
                 await testObject.delete();
                 reload();
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
         ],
       ),

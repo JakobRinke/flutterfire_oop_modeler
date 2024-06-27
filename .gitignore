@@ -25,3 +25,13 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+example/android
+example/ios
+example/build
+example/web
+example/macos
+example/.dart_tool
+example/.packages
+example/pubspec.lock
+example/lib/firebase_options.dart

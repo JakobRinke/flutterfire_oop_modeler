@@ -3,18 +3,23 @@ import 'package:flutterfire_oop_modeler/database_object.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-
-class DatabaseList<T extends DatabaseObject> { 
-
+/// A generic class representing a list of database objects.
+class DatabaseList<T extends DatabaseObject> {
   CollectionReference? ref;
   List<T> _list;
 
-  /// use refS for a string reference to the collection or ref for direct reference
-  DatabaseList({this.ref, String? refS, QuerySnapshot? d,T Function()? create}): _list = [] {
+  /// Constructs a DatabaseList instance.
+  ///
+  /// The [ref] parameter is used for direct reference to the collection.
+  /// The [refS] parameter is used for a string reference to the collection.
+  /// The [d] parameter is a QuerySnapshot used to initialize the list.
+  /// The [create] parameter is a function that creates an instance of T.
+  DatabaseList({this.ref, String? refS, QuerySnapshot? d, T Function()? create})
+      : _list = [] {
     if (ref == null && refS != null) {
       ref = firestore.collection(refS);
     }
-    if (ref==null) {
+    if (ref == null) {
       throw 'Collection reference is null';
     }
 
@@ -23,41 +28,43 @@ class DatabaseList<T extends DatabaseObject> {
     }
   }
 
-
+  /// Returns the length of the list.
   int get length => _list.length;
 
-  /// Reloads all Objects in the list and adds new ones if they are not in the list
+  /// Reloads all objects in the list and adds new ones if they are not in the list.
   Future<void> reloadComplete(T Function() create) async {
     QuerySnapshot snapshot = await ref!.get();
     _list = snapshot.docs.map((e) => loadSnapshot(e, create)).toList();
   }
 
-  /// Reloads all Objects in the list, does not add new ones
+  /// Reloads all objects in the list, does not add new ones.
   Future<void> reloadCurrent() async {
     for (var element in _list) {
       element.reload();
     }
   }
 
-  /// Load a snapshot into a DatabaseObject  - Not reccomended to use this method directly
+  /// Loads a snapshot into a DatabaseObject.
+  ///
+  /// This method is not recommended to be used directly.
   Future<void> updateAll() async {
     for (var element in _list) {
       element.update();
     }
   }
 
-  
+  /// Returns the object at the specified [index].
   T operator [](int index) => _list[index];
 
-  
+  /// Adds a value to the list.
   void add(T value) {
     DatabaseObject obj = value;
     obj.create(ref!);
     _list.add(value);
   }
 
-
-  bool contains (T value) {
+  /// Checks if the list contains the specified [value].
+  bool contains(T value) {
     for (var element in _list) {
       if (element.ref!.path == value.ref!.path) {
         return true;
@@ -66,7 +73,9 @@ class DatabaseList<T extends DatabaseObject> {
     return false;
   }
 
-  /// Will compare the reference.path of the objects and remove the object with the same path
+  /// Removes the object with the same path as the specified [value].
+  ///
+  /// Returns true if the object was removed, otherwise throws an exception.
   bool remove(T value) {
     T? found;
     for (var element in _list) {
@@ -83,34 +92,40 @@ class DatabaseList<T extends DatabaseObject> {
     return true;
   }
 
-
+  /// Adds all values from the specified [values] iterable to the list.
   void addAll(Iterable<T> values) {
     for (var element in values) {
       add(element);
     }
   }
 
-  /// map function
+  /// Applies the function [f] to each element of the list and returns an iterable of the results.
   Iterable<E> map<E>(E Function(T e) f) {
     return _list.map(f);
   }
 
+  /// Returns the list of objects.
   List<T> get list => _list;
-
 }
 
-
-Future<DatabaseList<T>> fromQuerySnapshot<T extends DatabaseObject>(CollectionReference ref, QuerySnapshot snapshot, T Function() creator) async {
+/// Creates a DatabaseList instance from a QuerySnapshot.
+Future<DatabaseList<T>> fromQuerySnapshot<T extends DatabaseObject>(
+    CollectionReference ref,
+    QuerySnapshot snapshot,
+    T Function() creator) async {
   return DatabaseList<T>(ref: ref, d: snapshot, create: creator);
 }
 
-Future<DatabaseList<T>> loadCollection<T extends DatabaseObject>(CollectionReference ref, T Function() creator) async {
+/// Loads a DatabaseList instance from a CollectionReference.
+Future<DatabaseList<T>> loadCollection<T extends DatabaseObject>(
+    CollectionReference ref, T Function() creator) async {
   DatabaseList<T> list = DatabaseList<T>(ref: ref);
   await list.reloadComplete(creator);
   return list;
 }
 
-Future<DatabaseList<T>> loadAllFromPath<T extends DatabaseObject>(String path, T Function() creator) {
+/// Loads a DatabaseList instance from a path.
+Future<DatabaseList<T>> loadAllFromPath<T extends DatabaseObject>(
+    String path, T Function() creator) {
   return loadCollection(firestore.collection(path), creator);
 }
-  
