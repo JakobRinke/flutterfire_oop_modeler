@@ -65,6 +65,7 @@ abstract class DatabaseObject {
       throw 'Document reference is null';
     }
     await ref!.delete();
+    ref = null;
   }
 
   /// Converts the object to a map representation.
@@ -100,4 +101,14 @@ Future<T> loadReference<T extends DatabaseObject>(
 Future<T> loadFromPath<T extends DatabaseObject>(
     String path, T Function() creator) {
   return loadReference(firestore.doc(path), creator);
+}
+
+Future<List<T>> loadAllFromQuery<T extends DatabaseObject>(
+    Query query, T Function() creator) async {
+  QuerySnapshot snapshot = await query.get();
+  List<T> list = [];
+  for (var doc in snapshot.docs) {
+    list.add(loadSnapshot<T>(doc, creator));
+  }
+  return list;
 }

@@ -129,3 +129,4 @@ Future<DatabaseList<T>> loadAllFromPath<T extends DatabaseObject>(
     String path, T Function() creator) {
   return loadCollection(firestore.collection(path), creator);
 }
+

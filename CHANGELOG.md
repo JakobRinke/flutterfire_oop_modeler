@@ -4,3 +4,5 @@
 - Small Changes
 ## 0.0.3
 - add repository
+## 0.0.4
+- add loadAllFromQuery Function
