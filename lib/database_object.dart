@@ -103,6 +103,7 @@ Future<T> loadFromPath<T extends DatabaseObject>(
   return loadReference(firestore.doc(path), creator);
 }
 
+/// Loads all [DatabaseObject]s from a [Query] using a creator function.
 Future<List<T>> loadAllFromQuery<T extends DatabaseObject>(
     Query query, T Function() creator) async {
   QuerySnapshot snapshot = await query.get();
