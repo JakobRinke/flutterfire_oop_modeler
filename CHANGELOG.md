@@ -6,3 +6,5 @@
 - add repository
 ## 0.0.4
 - add loadAllFromQuery Function
+## 0.0.5
+- bug fix
