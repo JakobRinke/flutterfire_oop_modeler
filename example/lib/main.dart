@@ -3,7 +3,7 @@ import 'package:example/testobject.dart';
 import 'package:example/testobjectview.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutterfire_oop_modeler/database_list.dart';
+import 'package:flutterfire_oop_modeler/database_object.dart';
 
 void main() async {
   // init firebase
@@ -38,8 +38,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DatabaseList<TestObject> testObjects =
-      DatabaseList<TestObject>(refS: 'testobjects');
+  List<TestObject> testObjects = [];
   bool isLoading = true;
 
   void initiState() {
@@ -48,7 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _loadTestObjects() async {
     isLoading = false;
-    await testObjects.reloadComplete(TestObject.new);
+    testObjects = await DatabaseObject.loadAllFromQuery(
+        firestore.collection('testobjects'), TestObject.new);
     // print("reloaded");
     // print(testObjects.map((e) => {e.name}).toList());
     setState(() {});

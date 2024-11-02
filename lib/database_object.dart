@@ -46,7 +46,7 @@ abstract class DatabaseObject {
 
   /// Updates the document referenced by [ref] with the current data.
   /// If [refe] is provided, it sets the [ref] to the new reference.
-  Future<void> update([refe]) async {
+  Future<void> update([DocumentReference? refe]) async {
     if (refe != null) {
       if (ref != null) {
         throw 'Document reference is already set';
@@ -78,38 +78,66 @@ abstract class DatabaseObject {
   void fromSnapshot(DocumentSnapshot d) {
     fromMap(d.data()! as Map<String, dynamic>);
   }
-}
 
-/// Loads a [DatabaseObject] from a [DocumentSnapshot] using a creator function.
-T loadSnapshot<T extends DatabaseObject>(
-    DocumentSnapshot d, T Function() creator) {
-  T obj = creator();
-  obj.ref = d.reference;
-  obj.fromSnapshot(d);
-  return obj;
-}
-
-/// Loads a [DatabaseObject] from a [DocumentReference] using a creator function.
-Future<T> loadReference<T extends DatabaseObject>(
-    DocumentReference ref, T Function() creator) {
-  return ref.get().then((DocumentSnapshot snapshot) {
-    return loadSnapshot<T>(snapshot, creator);
-  });
-}
-
-/// Loads a [DatabaseObject] from a document path using a creator function.
-Future<T> loadFromPath<T extends DatabaseObject>(
-    String path, T Function() creator) {
-  return loadReference(firestore.doc(path), creator);
-}
-
-/// Loads all [DatabaseObject]s from a [Query] using a creator function.
-Future<List<T>> loadAllFromQuery<T extends DatabaseObject>(
-    Query query, T Function() creator) async {
-  QuerySnapshot snapshot = await query.get();
-  List<T> list = [];
-  for (var doc in snapshot.docs) {
-    list.add(loadSnapshot<T>(doc, creator));
+  @override
+  String toString() {
+    return ref!.id.toString();
   }
-  return list;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is DatabaseObject) {
+      return ref == other.ref;
+    }
+    return false;
+  }
+
+  /// Loads a [DatabaseObject] from a [DocumentSnapshot] using a creator function.
+  static T loadSnapshot<T extends DatabaseObject>(
+      DocumentSnapshot d, T Function() creator) {
+    T obj = creator();
+    obj.ref = d.reference;
+    obj.fromSnapshot(d);
+    return obj;
+  }
+
+  /// Loads a [DatabaseObject] from a [DocumentReference] using a creator function.
+  static Future<T> loadReference<T extends DatabaseObject>(
+      DocumentReference ref, T Function() creator) {
+    return ref.get().then((DocumentSnapshot snapshot) {
+      return loadSnapshot<T>(snapshot, creator);
+    });
+  }
+
+  /// Loads a [DatabaseObject] from a document path using a creator function.
+  static Future<T> loadFromPath<T extends DatabaseObject>(
+      String path, T Function() creator) {
+    return loadReference(firestore.doc(path), creator);
+  }
+
+  /// Loads all [DatabaseObject]s from a [CollectionReference] using a creator function.
+  static List<T> loadAllFromSnapshot<T extends DatabaseObject>(
+      QuerySnapshot snapshot, T Function() creator) {
+    List<T> list = [];
+    for (var doc in snapshot.docs) {
+      list.add(loadSnapshot<T>(doc, creator));
+    }
+    return list;
+  }
+
+  /// Loads all [DatabaseObject]s from a [Query] using a creator function.
+  static Future<List<T>> loadAllFromQuery<T extends DatabaseObject>(
+      Query query, T Function() creator) async {
+    QuerySnapshot snapshot = await query.get();
+    return loadAllFromSnapshot(snapshot, creator);
+  }
+
+  /// Loads all [DatabaseObject]s from a [CollectionReference] using a creator function.
+  static Future<List<T>> loadAllFromCollection<T extends DatabaseObject>(
+      CollectionReference collection, T Function() creator) {
+    return loadAllFromQuery(collection, creator);
+  }
+
+  @override
+  int get hashCode => ref!.id.hashCode;
 }

@@ -1,6 +1,6 @@
 name: flutterfire_oop_modeler
 description: A OOP modeler for Firebase Firestore in Dart to create, read, update and delete documents in a Firestore database.
-version: 0.0.5
+version: 0.1.1
 repository: https://github.com/JakobRinke/flutterfire_oop_modeler
 homepage: https://github.com/JakobRinke/flutterfire_oop_modeler
 

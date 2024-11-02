@@ -17,7 +17,7 @@ A Object Like Model put on Firebase Firestore Database to make Modelling Databas
 
 
 ## Getting started
-Install the with `flutter pub add firebase_oop_modeler`
+Install the with `flutter pub add flutterfire_oop_modeler`
 
 ## Usage
 
