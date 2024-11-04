@@ -13,3 +13,5 @@
 - Removed Collection
 ## 0.1.1
 - Readme fix
+## 0.1.2
+- Added Refs

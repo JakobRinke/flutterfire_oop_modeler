@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterfire_oop_modeler/firebase_object_reference.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -77,6 +78,14 @@ abstract class DatabaseObject {
   /// Populates the object from a [DocumentSnapshot].
   void fromSnapshot(DocumentSnapshot d) {
     fromMap(d.data()! as Map<String, dynamic>);
+  }
+
+  /// Returns the string representation of the object.
+  FirebaseObjectReference toReference<T extends DatabaseObject>(
+      T Function() create,
+      [String? name]) {
+    name ??= toMap()['name'] ?? ref!.id;
+    return FirebaseObjectReference(ref!, name!, create);
   }
 
   @override

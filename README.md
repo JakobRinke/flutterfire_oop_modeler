@@ -53,17 +53,4 @@ TestObject to = await loadReference(DocumentReference d, TestObject.new);
 TestObject to = await loadAllFromPath("users/user1", TestObject.new);
 ```
 
-### Collection API
-You can scan Collections with the following functions:
-```dart
-// Not Reccomended
-DatabaseList<TestObject> lo = fromQuerySnapshot(CollectionReference d, QuerySnapshot l, TestObject.new);
-
-DatabaseList<TestObject> lo = loadCollection(CollectionReference d, TestObject.new);
-
-DatabaseList<TestObject> lo = loadAllFromPath("user", TestObject.new);
-
-```
-
-
 
