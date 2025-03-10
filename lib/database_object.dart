@@ -81,7 +81,7 @@ abstract class DatabaseObject {
   }
 
   /// Returns the string representation of the object.
-  FirebaseObjectReference toReference<T extends DatabaseObject>(
+  FirebaseObjectReference<T> toReference<T extends DatabaseObject>(
       T Function() create,
       [String? name]) {
     name ??= toMap()['name'] ?? ref!.id;

@@ -21,8 +21,15 @@ class FirebaseObjectReference<T extends DatabaseObject> {
     return _objectCache!;
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'ref': documentReference,
+      'name': name,
+    };
+  }
+
   /// Creates a new document in the specified [CollectionReference] and sets the [ref] to the newly created document.
-  static Future<List<U>> loadAllFromSnapshot<U extends DatabaseObject>(
+  static Future<List<U>> loadAll<U extends DatabaseObject>(
       List<FirebaseObjectReference<DatabaseObject>> refs) async {
     List<Future<DatabaseObject>> futures = [];
     for (FirebaseObjectReference<DatabaseObject> ref in refs) {
@@ -36,6 +43,28 @@ class FirebaseObjectReference<T extends DatabaseObject> {
   static FirebaseObjectReference<T> fromMap<T extends DatabaseObject>(
       Map<String, dynamic> map, T Function() create) {
     return FirebaseObjectReference<T>(
-        FirebaseFirestore.instance.doc(map['path']), map['name'], create);
+        map['ref'], map['name'], create);
   }
+
+  static List<FirebaseObjectReference<T>> fromList<T extends DatabaseObject>(
+      List<Map<String, dynamic>> d, T Function() create) {
+    return d.map(
+      (e) => fromMap(e, create),
+    ).toList();
+  } 
+
+  @override
+  int get hashCode => this.documentReference.id.hashCode;
+  
+  @override
+  bool operator ==(Object other) {
+    if (other is FirebaseObjectReference) {
+      return this.documentReference.id == other.documentReference.id;
+    } else if (other is DocumentReference) {
+      return this.documentReference.id == other.id;
+    }
+    return false;
+  }
+
+
 }
