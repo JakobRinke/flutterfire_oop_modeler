@@ -42,20 +42,21 @@ class FirebaseObjectReference<T extends DatabaseObject> {
   /// Creates a [FirebaseObjectReference] from a map.
   static FirebaseObjectReference<T> fromMap<T extends DatabaseObject>(
       Map<String, dynamic> map, T Function() create) {
-    return FirebaseObjectReference<T>(
-        map['ref'], map['name'], create);
+    return FirebaseObjectReference<T>(map['ref'], map['name'], create);
   }
 
   static List<FirebaseObjectReference<T>> fromList<T extends DatabaseObject>(
       List<Map<String, dynamic>> d, T Function() create) {
-    return d.map(
-      (e) => fromMap(e, create),
-    ).toList();
-  } 
+    return d
+        .map(
+          (e) => fromMap(e, create),
+        )
+        .toList();
+  }
 
   @override
   int get hashCode => this.documentReference.id.hashCode;
-  
+
   @override
   bool operator ==(Object other) {
     if (other is FirebaseObjectReference) {
@@ -65,6 +66,4 @@ class FirebaseObjectReference<T extends DatabaseObject> {
     }
     return false;
   }
-
-
 }
