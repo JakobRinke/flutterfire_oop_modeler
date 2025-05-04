@@ -11,6 +11,7 @@ class Objektauswahl<T extends DatabaseObject> extends StatefulWidget {
   final CollectionReference path;
   final bool nullable;
 
+  /// Creates a new instance of [Objektauswahl]
   const Objektauswahl(
       {super.key,
       required this.selectedId,
@@ -21,11 +22,11 @@ class Objektauswahl<T extends DatabaseObject> extends StatefulWidget {
       this.nullable = false});
 
   @override
-  _ObjektauswahlState<T> createState() => _ObjektauswahlState<T>();
+  ObjektauswahlState<T> createState() => ObjektauswahlState<T>();
 }
 
 /// The state of the [Objektauswahl] widget
-class _ObjektauswahlState<T extends DatabaseObject>
+class ObjektauswahlState<T extends DatabaseObject>
     extends State<Objektauswahl<T>> {
   late String? _currentSelectedId;
 

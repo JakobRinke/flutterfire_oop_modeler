@@ -9,14 +9,17 @@ abstract class SimpleDatabaseListView<T extends DatabaseObject>
 abstract class SimpleDatabaseListViewState<T extends DatabaseObject,
     U extends SimpleDatabaseListView<T>> extends State<U> {
   List<T> objects = [];
-
+  
+  /// Loads the objects from the database
   void loadObjects();
 
+  /// Removes the object from the list and calls setState
   void deleteObject(T obj) {
     objects.removeWhere((element) => element.ref == obj.ref);
     setState(() {});
   }
 
+  /// Adds the object to the list and calls setState
   void addObject();
 
   @override
